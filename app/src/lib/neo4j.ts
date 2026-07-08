@@ -122,7 +122,9 @@ export async function runQuery<T = Record<string, unknown>>(
   cypher: string,
   params: Record<string, unknown> = {}
 ): Promise<T[]> {
-  const session: Session = getDriver().session();
+  const session: Session = getDriver().session({
+    database: import.meta.env.VITE_NEO4J_DATABASE || "neo4j",
+  });
   const start = performance.now();
   const entryId = ++_logCounter;
 

@@ -50,8 +50,8 @@ pip install -r requirements.txt
 
 # 1. Generate and load the data
 python3 generate_data.py
-cat data/load_data.cypher | cypher-shell -u neo4j -p '<password>'
-#    (or: python3 -c "import mcp_server; mcp_server.load_demo()")
+cat data/load_data.cypher | cypher-shell -u neo4j -p '<password>' -d '<database>'
+#    (or: python3 -c "import mcp_server; mcp_server.load_demo()" — honours NEO4J_DATABASE)
 
 # 2. Start the React app
 cd app
@@ -69,6 +69,7 @@ python3 mcp_server.py --sse    # SSE on :8765
 Root `.env` (MCP server):
 ```
 NEO4J_URI=bolt://127.0.0.1:7687
+NEO4J_DATABASE=neo4j           # target database (created if missing: CREATE DATABASE <name>)
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=<password>
 ```
@@ -76,6 +77,7 @@ NEO4J_PASSWORD=<password>
 `app/.env` (React app):
 ```
 VITE_NEO4J_URI=bolt://127.0.0.1:7687
+VITE_NEO4J_DATABASE=neo4j      # must match the MCP server's NEO4J_DATABASE
 VITE_NEO4J_USER=neo4j
 VITE_NEO4J_PASSWORD=<password>
 VITE_GEMINI_API_KEY=<key>      # Assistant tab only

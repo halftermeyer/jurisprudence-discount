@@ -36,6 +36,7 @@ load_dotenv(Path(__file__).parent / ".env")
 NEO4J_URI = os.getenv("NEO4J_URI", "bolt://127.0.0.1:7687")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "")
+NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
 
 mcp = FastMCP(
     "Jurisprudence Discount Decisions",
@@ -102,7 +103,7 @@ def _fmt_query(query: str, params: dict | None = None) -> str:
 
 def run_cypher(query: str, params: dict | None = None) -> list[dict]:
     _get_trail().append(_fmt_query(query, params))
-    with driver.session() as session:
+    with driver.session(database=NEO4J_DATABASE) as session:
         result = session.run(query, params or {})
         return [dict(r) for r in result]
 
@@ -209,7 +210,7 @@ def load_demo() -> str:
     run_count = 0
     fail_count = 0
     errors = []
-    with driver.session() as session:
+    with driver.session(database=NEO4J_DATABASE) as session:
         for stmt in statements:
             try:
                 session.run(stmt).consume()
